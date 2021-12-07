@@ -8,23 +8,27 @@ fun main() {
     val inputs = input.split(",")
     val parsed = inputs.map { it.toInt() }
 
-    val i = parsed
+    val crabs = parsed
 
-    val max = i.maxOrNull()
+    val max = crabs.maxOrNull()
 
     var smallestTotal : Long? = null
     var bestPosition = 0
-    for (n in 0 .. max!!) {
+    for (position in 0 .. max!!) {
         var total = 0L
-        for (j in i) {
-            val dif = abs(j - n)
-            total += dif
+        for (crab in crabs) {
+            total += findFuelCost(crab, position)
         }
         if (smallestTotal == null || smallestTotal > total) {
             smallestTotal = total
-            bestPosition = n
+            bestPosition = position
         }
     }
 
     println("The best position is $bestPosition, with a total of $smallestTotal")
+}
+
+fun findFuelCost(crab : Int, position: Int) : Int {
+    val dif = abs(crab - position)
+    return dif * (dif + 1) / 2
 }
