@@ -1,7 +1,7 @@
 import java.io.File
 import kotlin.math.abs
 
-val input = File("src/main/resources/input").readText()
+val input = File("src/main/resources/day7/input").readText()
 val smallInput = arrayOf(16,1,2,0,4,2,7,1,2,14)
 
 fun main() {
