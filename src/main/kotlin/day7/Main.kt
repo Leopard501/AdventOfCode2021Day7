@@ -30,7 +30,7 @@ fun main() {
     println("The best position is $bestPosition, with a total of $smallestTotal")
 }
 
-fun findFuelCost(crab : Int, position: Int) : Int {
+fun findFuelCost(crab : Int, position : Int) : Int {
     val dif = abs(crab - position)
     return dif * (dif + 1) / 2
 }
