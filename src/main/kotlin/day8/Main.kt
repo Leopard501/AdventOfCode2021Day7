@@ -2,7 +2,7 @@ package day8
 
 import java.io.File
 
-val input = File("src/main/resources/day8").readLines()
+val input = File("src/main/kotlin/day8/input").readLines()
 
 fun main() {
     val lines = arrayOfNulls<Line>(input.size)
