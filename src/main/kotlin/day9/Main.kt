@@ -44,9 +44,7 @@ class Basin(center: Node) {
         openNodes.add(center)
         while (true) {
             val edgeNodes = ArrayList<Node>()
-            for (n in openNodes) {
-                addNeighborsTo(n, edgeNodes)
-            }
+            openNodes.forEach { addNeighborsTo(it, edgeNodes) }
             closedNodes.addAll(openNodes)
             if (edgeNodes.size == 0) break
             openNodes = edgeNodes
@@ -105,8 +103,6 @@ fun getVal(y: Int, x: Int): Int {
 
 fun printVectorArray(arr: ArrayList<Array<Int>>) {
     print("[")
-    for (v in arr) {
-        print("(${v[1]}, ${v[0]}),")
-    }
+    arr.forEach { println("(${it[1]}, ${it[0]}),") }
     print("]")
 }
