@@ -1,6 +1,7 @@
 package day5
 
 import java.io.File
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
@@ -26,6 +27,14 @@ class Grid {
         } else if (line.x1 == line.x2) {
             for (y in min(line.y1, line.y2) .. max(line.y1, line.y2)) {
                 grid[line.x1][y]++
+            }
+        } else {
+            for (d in 0 .. abs(line.x1 - line.x2)) {
+                grid[
+                        line.x1 + d * -((line.x1 - line.x2) / abs(line.x1 - line.x2))
+                ][
+                        line.y1 + d * -((line.y1 - line.y2) / abs(line.y1 - line.y2))
+                ]++
             }
         }
     }
