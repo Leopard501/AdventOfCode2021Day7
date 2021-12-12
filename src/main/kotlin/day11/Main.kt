@@ -6,7 +6,10 @@ val octopuses = OctopusGrid(File("src/main/kotlin/day11/input").readLines())
 
 fun main() {
     var count = 0
-    for (i in 1 .. 100) count += octopuses.step()
+    while (true) {
+        count++
+        if (octopuses.step()) break
+    }
     println(count)
 }
 
@@ -22,9 +25,13 @@ class OctopusGrid(input: List<String>) {
         }
     }
 
-    fun step(): Int {
+    fun step(): Boolean {
         firstStep()
-        return secondStep(0, ArrayList())
+        return secondStep(0, ArrayList()) == getTotal()
+    }
+
+    private fun getTotal(): Int {
+        return grid.size * grid[0].size
     }
 
     private fun firstStep() {
