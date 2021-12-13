@@ -9,7 +9,7 @@ val caveSystem = CaveSystem(File("src/main/kotlin/day12/test1").readLines())
 fun main() {
     println(caveSystem.toString())
     val pathTree = Tree(caveSystem)
-//    println(pathTree.ends)
+    println(pathTree.ends)
     println(pathTree.ends.size)
 }
 
@@ -31,7 +31,12 @@ class Tree(caveSystem: CaveSystem) {
                 continue
             }
             for (c in top.cave.connectedCaves) {
-                if (c.isLarge || !top.hasAsAncestor(c)) {
+                if (c.name == "start") continue
+                if (
+                    c.isLarge ||
+                    top.hasRepeatedAncestor() && top.hasAsAncestor(c) < 2 ||
+                    top.hasAsAncestor(c) < 1
+                ) {
                     searchQueue.enqueue(Node(c, top))
                 }
             }
@@ -42,15 +47,30 @@ class Tree(caveSystem: CaveSystem) {
 
         val children = ArrayList<Node>()
 
-        fun hasAsAncestor(cave: Cave): Boolean {
-            //this will miss if this is an ancestor to cave,
-            //but it shouldn't be possible for cave to be its own ancestor
+        fun hasRepeatedAncestor(): Boolean {
+            val ancestors = ArrayList<Node>()
             var n = this
             while (n.parent != null) {
                 n = n.parent!!
-                if (n.cave == cave) return true
+                ancestors.add(n)
+            }
+            ancestors.sortBy { it.cave.name }
+            for (i in 1 until ancestors.size) {
+                if (ancestors[i].cave.name == ancestors[i-1].cave.name) return true
             }
             return false
+        }
+
+        fun hasAsAncestor(cave: Cave): Int {
+            //this will miss if this is an ancestor to cave,
+            //but it shouldn't be possible for cave to be its own ancestor
+            var count = 0
+            var n = this
+            while (n.parent != null) {
+                n = n.parent!!
+                if (n.cave == cave) count++
+            }
+            return count
         }
 
         override fun toString(): String {
