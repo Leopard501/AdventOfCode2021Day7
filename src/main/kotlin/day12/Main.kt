@@ -1,16 +1,76 @@
 package day12
 
+import sun.misc.Queue
 import java.io.File
+import kotlin.collections.ArrayList
 
-val caveSystem = CaveSystem(File("src/main/kotlin/day12/input").readLines())
+val caveSystem = CaveSystem(File("src/main/kotlin/day12/test1").readLines())
 
 fun main() {
     println(caveSystem.toString())
+    val pathTree = Tree(caveSystem)
+//    println(pathTree.ends)
+    println(pathTree.ends.size)
+}
+
+class Tree(caveSystem: CaveSystem) {
+
+    private val root = Node(caveSystem.start, null)
+
+    val ends = ArrayList<Node>()
+
+    init {
+        //this is breadth-first search
+        val searchQueue = Queue<Node>()
+        searchQueue.enqueue(root)
+        while (!searchQueue.isEmpty) {
+            val top = searchQueue.dequeue()
+            if (top.parent != null) top.parent.children.add(top)
+            if (top.cave.name == "end") {
+                ends.add(top)
+                continue
+            }
+            for (c in top.cave.connectedCaves) {
+                if (c.isLarge || !top.hasAsAncestor(c)) {
+                    searchQueue.enqueue(Node(c, top))
+                }
+            }
+        }
+    }
+
+    class Node(val cave: Cave, val parent: Node?) {
+
+        val children = ArrayList<Node>()
+
+        fun hasAsAncestor(cave: Cave): Boolean {
+            //this will miss if this is an ancestor to cave,
+            //but it shouldn't be possible for cave to be its own ancestor
+            var n = this
+            while (n.parent != null) {
+                n = n.parent!!
+                if (n.cave == cave) return true
+            }
+            return false
+        }
+
+        override fun toString(): String {
+            var returnVar = "Node: {name=${cave.name}, ancestors=["
+            var p = parent
+            while (p != null) {
+                returnVar += "${p.cave.name},"
+                p = p.parent
+            }
+            returnVar += "]}"
+            return returnVar
+        }
+    }
 }
 
 class CaveSystem(input: List<String>) {
 
     private val caves = ArrayList<Cave>()
+
+    lateinit var start: Cave
 
     init {
         for (connections in input) {
@@ -23,6 +83,7 @@ class CaveSystem(input: List<String>) {
                     caves += c
                 }
                 endCaves[i] = c
+                if (c.name == "start") start = c
             }
             endCaves[0].addConnection(endCaves[1])
             endCaves[1].addConnection(endCaves[0])
